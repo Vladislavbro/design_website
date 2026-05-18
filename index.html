@@ -64,8 +64,11 @@
   /* Hero */
   .hero{padding:80px 0 0;background:var(--bg)}
   .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
-  .hero h1{font-size:64px;line-height:1.08;margin-bottom:24px;letter-spacing:-.02em}
+  .hero h1{font-size:54px;line-height:1.1;margin-bottom:24px;letter-spacing:-.02em}
+  .hero h1 .line{display:block;white-space:nowrap}
   .hero-h1-accent{color:var(--accent);font-weight:600}
+  @media (max-width:1100px){.hero h1{font-size:46px}}
+  @media (max-width:980px){.hero h1{font-size:38px}}
   .hero-sub{font-size:18px;color:var(--muted);margin-bottom:28px;max-width:520px}
   .hero-bullets{list-style:none;margin-bottom:36px}
   .hero-bullets li{
@@ -302,7 +305,11 @@
   <div class="container">
     <div class="hero-grid">
       <div>
-        <h1>Проектирование кафе<br>и ресторанов<br><span class="hero-h1-accent">в Санкт-Петербурге</span></h1>
+        <h1>
+          <span class="line">Проектирование кафе</span>
+          <span class="line">и ресторанов</span>
+          <span class="line hero-h1-accent">в&nbsp;Санкт&#8209;Петербурге</span>
+        </h1>
         <p class="hero-sub">Дизайн-проект под ключ за 30–45 дней: концепция, чертежи, технология, согласование с подрядчиками. С 2016 года спроектировали 100+ заведений.</p>
         <ul class="hero-bullets">
           <li>Срок проекта от 30 дней</li>
@@ -327,7 +334,7 @@
     <div class="trust-grid">
       <div><div class="trust-num">100+</div><div class="trust-label">Реализованных проектов</div></div>
       <div><div class="trust-num">8 лет</div><div class="trust-label">На рынке СПб</div></div>
-      <div><div class="trust-num">30 дн.</div><div class="trust-label">Минимальный срок проекта</div></div>
+      <div><div class="trust-num">30 дней</div><div class="trust-label">Минимальный срок проекта</div></div>
       <div><div class="trust-num">4</div><div class="trust-label">Премии и номинации</div></div>
     </div>
   </div>
