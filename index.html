@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>РестАрт — проектирование кафе и ресторанов в Санкт-Петербурге</title>
+<style>
+  :root{
+    --bg:#ffffff;
+    --bg-soft:#f6f2ec;
+    --text:#1a1a1a;
+    --muted:#6b6b6b;
+    --line:#e6e0d6;
+    --accent:#ab8964;
+    --accent-dark:#8d6d4b;
+    --dark:#111111;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Helvetica Neue','Inter',system-ui,-apple-system,sans-serif;
+    color:var(--text);background:var(--bg);line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1240px;margin:0 auto;padding:0 32px}
+  h1,h2,h3,h4{font-weight:600;letter-spacing:-.01em;color:var(--text)}
+  h2{font-size:42px;line-height:1.1;margin-bottom:12px}
+  .section-sub{color:var(--muted);font-size:16px;margin-bottom:48px}
+  .section{padding:96px 0}
+
+  /* Buttons */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:18px 36px;border-radius:6px;font-weight:600;
+    font-size:15px;letter-spacing:.02em;text-transform:uppercase;
+    cursor:pointer;border:none;transition:all .2s ease;
+  }
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:var(--accent-dark)}
+  .btn-outline{background:transparent;color:var(--text);border:1.5px solid var(--text)}
+  .btn-outline:hover{background:var(--text);color:#fff}
+  .btn-ghost{background:transparent;color:var(--accent);padding:14px 0;font-size:14px}
+  .btn-ghost:hover{color:var(--accent-dark)}
+
+  /* Header */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.96);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+  .logo{display:flex;align-items:center;gap:14px}
+  .logo img{width:54px;height:54px}
+  .logo-text{font-size:11px;line-height:1.3;color:var(--muted);max-width:160px}
+  .logo-text strong{display:block;color:var(--text);font-size:13px;margin-bottom:2px}
+  nav ul{display:flex;gap:36px;list-style:none}
+  nav a{font-size:15px;color:var(--text);transition:color .2s}
+  nav a:hover{color:var(--accent)}
+  .header-phone{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px}
+  .header-phone::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+
+  /* Hero */
+  .hero{padding:80px 0 0;background:var(--bg)}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+  .hero h1{font-size:64px;line-height:1.08;margin-bottom:24px;letter-spacing:-.02em}
+  .hero-h1-accent{color:var(--accent);font-weight:600}
+  .hero-sub{font-size:18px;color:var(--muted);margin-bottom:28px;max-width:520px}
+  .hero-bullets{list-style:none;margin-bottom:36px}
+  .hero-bullets li{
+    padding:10px 0 10px 32px;position:relative;font-size:16px;color:var(--text);
+  }
+  .hero-bullets li::before{
+    content:"✓";position:absolute;left:0;top:10px;
+    color:var(--accent);font-weight:700;font-size:18px;
+  }
+  .hero-cta{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .hero-cta small{color:var(--muted);font-size:14px}
+  .hero-image{
+    border-radius:12px;overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.08);
+  }
+  .hero-image img{width:100%;height:560px;object-fit:cover}
+
+  /* Trust strip */
+  .trust-strip{
+    background:var(--bg-soft);padding:24px 0;margin-top:80px;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .trust-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:40px;text-align:center;
+  }
+  .trust-num{font-size:32px;font-weight:700;color:var(--accent);letter-spacing:-.02em}
+  .trust-label{font-size:13px;color:var(--muted);margin-top:4px}
+
+  /* Services */
+  .services-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  }
+  .service-card{
+    position:relative;border-radius:12px;overflow:hidden;
+    aspect-ratio:3/4;color:#fff;cursor:pointer;
+    transition:transform .3s ease;
+  }
+  .service-card:hover{transform:translateY(-6px)}
+  .service-card img{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;filter:brightness(.55);
+    transition:filter .3s, transform .6s;
+  }
+  .service-card:hover img{filter:brightness(.65);transform:scale(1.04)}
+  .service-card .content{
+    position:absolute;inset:0;padding:36px;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    gap:12px;
+  }
+  .service-card h3{font-size:24px;color:#fff;line-height:1.2}
+  .service-card p{font-size:14px;line-height:1.5;color:rgba(255,255,255,.85)}
+  .service-card .meta{
+    display:flex;align-items:center;gap:16px;
+    margin-top:8px;padding-top:16px;border-top:1px solid rgba(255,255,255,.2);
+    font-size:13px;
+  }
+  .service-card .meta strong{color:var(--accent)}
+
+  /* Advantages (3 icons) */
+  .advantages{background:var(--bg-soft);padding:96px 0}
+  .adv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:48px}
+  .adv-card{
+    background:#fff;padding:40px 32px;border-radius:12px;
+    border:1px solid var(--line);transition:all .25s;
+  }
+  .adv-card:hover{box-shadow:0 12px 32px rgba(0,0,0,.06);transform:translateY(-4px)}
+  .adv-icon{
+    width:64px;height:64px;display:flex;align-items:center;justify-content:center;
+    background:#fdf9f3;border-radius:50%;margin-bottom:24px;
+  }
+  .adv-icon img{width:36px;height:36px}
+  .adv-card h3{font-size:20px;margin-bottom:12px}
+  .adv-card p{font-size:15px;color:var(--muted);line-height:1.6}
+
+  /* Portfolio */
+  .portfolio-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  }
+  .project-card{
+    border-radius:12px;overflow:hidden;background:#fff;
+    border:1px solid var(--line);transition:all .25s;
+    cursor:pointer;
+  }
+  .project-card:hover{box-shadow:0 16px 40px rgba(0,0,0,.08);transform:translateY(-6px)}
+  .project-img{height:280px;overflow:hidden}
+  .project-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  .project-card:hover .project-img img{transform:scale(1.05)}
+  .project-body{padding:24px 28px 28px}
+  .project-tag{
+    display:inline-block;font-size:11px;letter-spacing:.1em;
+    color:var(--accent);text-transform:uppercase;font-weight:700;margin-bottom:8px;
+  }
+  .project-card h3{font-size:22px;margin-bottom:8px;letter-spacing:0}
+  .project-loc{font-size:14px;color:var(--muted);margin-bottom:16px}
+  .project-meta{
+    display:flex;gap:16px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--muted);
+  }
+  .project-meta span strong{color:var(--text);display:block;font-size:14px;margin-bottom:2px}
+
+  /* Reviews */
+  .reviews{background:var(--bg-soft)}
+  .reviews-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:48px;
+  }
+  .review{
+    background:#fff;padding:36px;border-radius:12px;border:1px solid var(--line);
+  }
+  .review-quote{
+    font-size:16px;line-height:1.7;color:var(--text);margin-bottom:24px;
+    font-style:italic;
+  }
+  .review-quote::before{
+    content:"\201C";font-size:48px;color:var(--accent);
+    line-height:0;vertical-align:-14px;margin-right:6px;
+    font-family:Georgia,serif;
+  }
+  .review-author{display:flex;align-items:center;gap:16px;padding-top:20px;border-top:1px solid var(--line)}
+  .avatar{
+    width:56px;height:56px;border-radius:50%;background:var(--accent);
+    color:#fff;display:flex;align-items:center;justify-content:center;
+    font-weight:600;font-size:18px;flex-shrink:0;
+  }
+  .review-author strong{display:block;font-size:15px}
+  .review-author span{font-size:13px;color:var(--muted)}
+
+  /* History */
+  .history-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:64px;align-items:center}
+  .history-image{border-radius:12px;overflow:hidden;background:var(--bg-soft)}
+  .history-image img{width:100%;height:560px;object-fit:cover;object-position:center top}
+  .history-text h2{margin-bottom:24px}
+  .history-text p{font-size:16px;color:var(--muted);margin-bottom:20px;line-height:1.7}
+  .awards{margin:32px 0;padding:24px;background:var(--bg-soft);border-radius:8px;border-left:3px solid var(--accent)}
+  .awards-title{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:700;margin-bottom:12px}
+  .awards ul{list-style:none}
+  .awards li{padding:6px 0;font-size:14px;color:var(--text)}
+  .awards li::before{content:"◆";color:var(--accent);margin-right:10px;font-size:10px}
+
+  /* Partners */
+  .partners{padding:64px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .partners-title{text-align:center;font-size:13px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:32px}
+  .partners-grid{
+    display:grid;grid-template-columns:repeat(7,1fr);gap:32px;align-items:center;
+  }
+  .partners-grid img{
+    max-height:60px;width:auto;margin:0 auto;
+    filter:grayscale(1);opacity:.55;transition:all .25s;
+  }
+  .partners-grid img:hover{filter:grayscale(0);opacity:1}
+
+  /* Form section */
+  .form-section{
+    background:var(--dark);color:#fff;
+    border-radius:16px;padding:64px;margin:96px auto;max-width:1240px;
+    display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
+  }
+  .form-section h2{color:#fff;font-size:38px;margin-bottom:16px}
+  .form-section p{font-size:16px;color:#bdbdbd;margin-bottom:24px;line-height:1.6}
+  .form-section .perks{list-style:none;margin-top:24px}
+  .form-section .perks li{padding:6px 0 6px 28px;position:relative;font-size:14px;color:#dcdcdc}
+  .form-section .perks li::before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:700}
+  form{display:flex;flex-direction:column;gap:14px}
+  form input, form textarea{
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);
+    color:#fff;padding:16px 18px;border-radius:8px;
+    font-size:15px;font-family:inherit;outline:none;transition:border-color .2s;
+  }
+  form input:focus, form textarea:focus{border-color:var(--accent)}
+  form input::placeholder, form textarea::placeholder{color:#888}
+  form textarea{min-height:90px;resize:vertical}
+  .form-consent{font-size:12px;color:#888;display:flex;align-items:center;gap:8px}
+  .form-consent input{width:auto;padding:0;margin:0}
+
+  /* Footer */
+  footer{background:#0a0a0a;color:#bdbdbd;padding:64px 0 32px}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px}
+  footer h4{color:#fff;font-size:14px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px}
+  footer ul{list-style:none}
+  footer li{padding:6px 0;font-size:14px}
+  footer a:hover{color:var(--accent)}
+  .footer-phone{font-size:24px;color:#fff;font-weight:600;margin-bottom:8px;display:block}
+  .footer-email{font-size:15px;color:#bdbdbd}
+  .footer-bottom{
+    padding-top:24px;border-top:1px solid #1f1f1f;
+    display:flex;justify-content:space-between;font-size:13px;color:#666;
+  }
+
+  /* Annotation badge (для заказчика) */
+  .note-badge{
+    background:#fff4dd;border:1px dashed #d4a857;color:#7a5418;
+    font-size:12px;padding:6px 10px;border-radius:6px;
+    display:inline-block;margin-top:8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 980px){
+    h2{font-size:32px}
+    .hero h1{font-size:42px}
+    .hero-grid,.history-grid,.form-section,.footer-grid{grid-template-columns:1fr;gap:40px}
+    .services-grid,.portfolio-grid,.adv-grid,.reviews-grid{grid-template-columns:1fr}
+    .trust-grid{grid-template-columns:repeat(2,1fr);gap:24px}
+    .partners-grid{grid-template-columns:repeat(3,1fr);gap:24px}
+    .form-section{padding:40px 28px;margin:48px 16px}
+    .section{padding:64px 0}
+    .hero-image img{height:340px}
+    .history-image img{height:400px}
+    nav{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container header-inner">
+    <div class="logo">
+      <img src="images/0.png" alt="РестАрт">
+      <div class="logo-text"><strong>РестАрт</strong>Дизайн интерьера кафе и ресторанов</div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#services">Услуги</a></li>
+        <li><a href="#portfolio">Проекты</a></li>
+        <li><a href="#history">О нас</a></li>
+        <li><a href="#contacts">Контакты</a></li>
+      </ul>
+    </nav>
+    <a href="tel:+79006487238" class="header-phone">+7 (900) 648-72-38</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <h1>Проектирование кафе<br>и ресторанов<br><span class="hero-h1-accent">в Санкт-Петербурге</span></h1>
+        <p class="hero-sub">Дизайн-проект под ключ за 30–45 дней: концепция, чертежи, технология, согласование с подрядчиками. С 2016 года спроектировали 100+ заведений.</p>
+        <ul class="hero-bullets">
+          <li>Срок проекта от 30 дней</li>
+          <li>Согласуем СанПиН и ХАССП</li>
+          <li>Ведём от идеи до открытия</li>
+        </ul>
+        <div class="hero-cta">
+          <a href="#form" class="btn btn-primary">Оставить заявку</a>
+          <a href="#portfolio" class="btn btn-outline">Смотреть проекты</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="images/1.png" alt="Интерьер кафе" loading="eager">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="container">
+    <div class="trust-grid">
+      <div><div class="trust-num">100+</div><div class="trust-label">Реализованных проектов</div></div>
+      <div><div class="trust-num">8 лет</div><div class="trust-label">На рынке СПб</div></div>
+      <div><div class="trust-num">30 дн.</div><div class="trust-label">Минимальный срок проекта</div></div>
+      <div><div class="trust-num">4</div><div class="trust-label">Премии и номинации</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="container">
+    <h2>Услуги</h2>
+    <p class="section-sub">Закрываем весь цикл — от концепции до открытия. Цены и сроки фиксируем в договоре.</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <img src="images/2.png" alt="">
+        <div class="content">
+          <h3>Технологический проект кухни</h3>
+          <p>Расставим оборудование, рассчитаем мощности, подготовим документы для Роспотребнадзора и пожарной. Кухня пройдёт согласования с первого раза.</p>
+          <div class="meta"><span>Срок: <strong>от 15 дней</strong></span></div>
+        </div>
+      </div>
+      <div class="service-card">
+        <img src="images/3.png" alt="">
+        <div class="content">
+          <h3>Дизайн-проект интерьера</h3>
+          <p>Концепция, 3D-визуализация, рабочие чертежи, авторский надзор до открытия. Заведение, которое работает на средний чек.</p>
+          <div class="meta"><span>Срок: <strong>от 30 дней</strong></span></div>
+        </div>
+      </div>
+      <div class="service-card">
+        <img src="images/4.png" alt="">
+        <div class="content">
+          <h3>Рестайлинг действующего заведения</h3>
+          <p>Обновим интерьер без долгого закрытия. Подходит, если упал трафик или формат устарел.</p>
+          <div class="meta"><span>Срок: <strong>от 30 дней</strong></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADVANTAGES -->
+<section class="advantages">
+  <div class="container">
+    <h2>Закрываем главные риски открытия</h2>
+    <p class="section-sub">Что обычно тормозит запуск — и как мы это решаем на этапе проекта.</p>
+    <div class="adv-grid">
+      <div class="adv-card">
+        <div class="adv-icon"><img src="images/6.svg" alt=""></div>
+        <h3>Согласуем СанПиН и ХАССП</h3>
+        <p>Знаем актуальные требования и закладываем их в проект на старте, а не на этапе сдачи объекта.</p>
+      </div>
+      <div class="adv-card">
+        <div class="adv-icon"><img src="images/7.svg" alt=""></div>
+        <h3>Спроектируем вентиляцию по нормам</h3>
+        <p>Расчёт воздухообмена и подбор оборудования — заведение пройдёт техэкспертизу с первого раза.</p>
+      </div>
+      <div class="adv-card">
+        <div class="adv-icon"><img src="images/8.svg" alt=""></div>
+        <h3>Договоримся с подрядчиками</h3>
+        <p>Передаём проект подрядчикам ТПК и СМР с авторским надзором. Вам не придётся объяснять им чертежи.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="section" id="portfolio">
+  <div class="container">
+    <h2>Наше портфолио</h2>
+    <p class="section-sub">Реализованные проекты — кофейни, рестораны, столовые в Петербурге и области.</p>
+    <div class="portfolio-grid">
+      <div class="project-card">
+        <div class="project-img"><img src="images/19.jpg" alt="Gastronomist"></div>
+        <div class="project-body">
+          <span class="project-tag">Ресторан · 2023</span>
+          <h3>Gastronomist</h3>
+          <p class="project-loc">БЦ «Невская ратуша», Санкт-Петербург</p>
+          <div class="project-meta">
+            <span><strong>180 м²</strong>Площадь</span>
+            <span><strong>42 дня</strong>Срок проекта</span>
+            <span><strong>Под ключ</strong>Объём работ</span>
+          </div>
+          <div class="note-badge">↑ Замените цифры на реальные</div>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-img"><img src="images/20.jpg" alt="Plump Coffee"></div>
+        <div class="project-body">
+          <span class="project-tag">Кофейня · 2024</span>
+          <h3>Plump Coffee</h3>
+          <p class="project-loc">ул. Рентгена, 25, Санкт-Петербург</p>
+          <div class="project-meta">
+            <span><strong>70 м²</strong>Площадь</span>
+            <span><strong>30 дней</strong>Срок проекта</span>
+            <span><strong>Первая точка</strong>Задача</span>
+          </div>
+          <div class="note-badge">↑ Замените цифры на реальные</div>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-img"><img src="images/21.jpg" alt="Место встречи"></div>
+        <div class="project-body">
+          <span class="project-tag">Кафе · 2023</span>
+          <h3>Место встречи</h3>
+          <p class="project-loc">пр. Ленина, 17Б, Зеленогорск</p>
+          <div class="project-meta">
+            <span><strong>120 м²</strong>Площадь</span>
+            <span><strong>38 дней</strong>Срок проекта</span>
+            <span><strong>Рестайлинг</strong>Задача</span>
+          </div>
+          <div class="note-badge">↑ Замените цифры на реальные</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <a href="#form" class="btn btn-outline">Обсудить свой проект</a>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="section reviews">
+  <div class="container">
+    <h2>Отзывы клиентов</h2>
+    <p class="section-sub">Что говорят владельцы заведений после работы с нашей командой.</p>
+    <div class="reviews-grid">
+      <div class="review">
+        <p class="review-quote">Ребята молодцы, работают ответственно, прислушиваются к пожеланиям, внимательно относятся к деталям — делают «как для себя». Быстро реагируют, отвечают, приезжают. Одним словом — приятно работать.</p>
+        <div class="review-author">
+          <div class="avatar">КС</div>
+          <div>
+            <strong>Ксения Смирнова</strong>
+            <span>Собственник кофейни Plump Coffee</span>
+          </div>
+        </div>
+      </div>
+      <div class="review">
+        <p class="review-quote">У меня было мало опыта в открытии кофейни с нуля. Ребята взяли все вопросы по проектированию и согласованию: чертежи, согласования с УК, подрядчиков, сроки. В процессе всё объясняли, предлагали решения, помогали в выборе. Сам бы делал дольше.</p>
+        <div class="review-author">
+          <div class="avatar">ЛЧ</div>
+          <div>
+            <strong>Лидия Черданцева</strong>
+            <span>Собственник кафе «Место встречи»</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px">
+      <a href="#" class="btn-ghost">Оставить свой отзыв →</a>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section class="section" id="history">
+  <div class="container">
+    <div class="history-grid">
+      <div class="history-image"><img src="images/9.jpg" alt="Светлана Садальская"></div>
+      <div class="history-text">
+        <h2>История нашей компании</h2>
+        <p>Студия РестАрт с 2016 года занимается проектированием кафе и ресторанов в Санкт-Петербурге. За 8 лет мы реализовали более 100 коммерческих проектов — от компактных кофеен до полноценных ресторанов в БЦ.</p>
+        <p>В команде архитекторы, технологи и инженеры. Мы не передаём ключевые этапы на аутсорс и берём ответственность за то, чтобы проект прошёл Роспотребнадзор и пожарную с первого раза.</p>
+        <div class="awards">
+          <div class="awards-title">Наши достижения</div>
+          <ul>
+            <li>Участники выставки ARCHITECT TO DAY 2019</li>
+            <li>Номинанты конкурса ARCHITECT AWARDS 2020</li>
+            <li>Номинанты конкурса ARCHITECT AWARDS 2021</li>
+            <li>Спикеры выставки Design&Decor 2022 в ExpoForum</li>
+          </ul>
+        </div>
+        <a href="#form" class="btn btn-primary">Обсудить проект</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="partners">
+  <div class="container">
+    <div class="partners-title">Нам доверяют</div>
+    <div class="partners-grid">
+      <img src="images/11.png" alt="">
+      <img src="images/12.png" alt="">
+      <img src="images/13.png" alt="">
+      <img src="images/14.png" alt="">
+      <img src="images/15.png" alt="">
+      <img src="images/16.png" alt="">
+      <img src="images/17.png" alt="">
+    </div>
+  </div>
+</section>
+
+<!-- FORM -->
+<section class="form-section" id="form">
+  <div>
+    <h2>Расскажите про объект</h2>
+    <p>Открываете первое заведение или перезапускаете действующее? Оставьте заявку — за 15 минут обсудим формат, площадь и бюджет, пришлём ориентир по срокам и стоимости.</p>
+    <ul class="perks">
+      <li>Бесплатная консультация — 15 минут</li>
+      <li>Ориентир по цене и срокам сразу после звонка</li>
+      <li>Без рассылок и спама</li>
+    </ul>
+  </div>
+  <form>
+    <input type="text" placeholder="Ваше имя" required>
+    <input type="tel" placeholder="Телефон *" required>
+    <textarea placeholder="Расскажите про объект: формат, площадь, стадия (необязательно)"></textarea>
+    <button type="submit" class="btn btn-primary" style="width:100%">Отправить заявку</button>
+    <label class="form-consent">
+      <input type="checkbox" checked>
+      <span>Согласен с обработкой персональных данных</span>
+    </label>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer id="contacts">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>Контакты</h4>
+        <a href="tel:+79006487238" class="footer-phone">+7 (900) 648-72-38</a>
+        <a href="mailto:Restart6487238@yandex.ru" class="footer-email">Restart6487238@yandex.ru</a>
+        <p style="margin-top:16px;font-size:14px;color:#888">Санкт-Петербург<br>Работаем по всей России и СНГ</p>
+      </div>
+      <div>
+        <h4>Услуги</h4>
+        <ul>
+          <li><a href="#services">Технологический проект</a></li>
+          <li><a href="#services">Дизайн интерьера</a></li>
+          <li><a href="#services">Рестайлинг</a></li>
+          <li><a href="#services">Авторский надзор</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Компания</h4>
+        <ul>
+          <li><a href="#history">О нас</a></li>
+          <li><a href="#portfolio">Портфолио</a></li>
+          <li><a href="#">Отзывы</a></li>
+          <li><a href="#form">Связаться</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ИП Садальская С. А.</span>
+      <span>Сайт разработан с заботой о деталях</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
