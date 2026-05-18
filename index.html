@@ -65,10 +65,13 @@
   .hero{padding:80px 0 0;background:var(--bg)}
   .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
   .hero h1{font-size:54px;line-height:1.1;margin-bottom:24px;letter-spacing:-.02em}
-  .hero h1 .line{display:block;white-space:nowrap}
+  .hero h1 .line{display:block}
   .hero-h1-accent{color:var(--accent);font-weight:600}
-  @media (max-width:1100px){.hero h1{font-size:46px}}
-  @media (max-width:980px){.hero h1{font-size:38px}}
+  /* nowrap только на широких — там точно хватает места */
+  @media (min-width:1101px){.hero h1 .line{white-space:nowrap}}
+  @media (max-width:1100px){.hero h1{font-size:40px}}
+  @media (max-width:768px){.hero h1{font-size:30px;line-height:1.15}}
+  @media (max-width:380px){.hero h1{font-size:26px}}
   .hero-sub{font-size:18px;color:var(--muted);margin-bottom:28px;max-width:520px}
   .hero-bullets{list-style:none;margin-bottom:36px}
   .hero-bullets li{
@@ -139,7 +142,7 @@
     width:64px;height:64px;display:flex;align-items:center;justify-content:center;
     background:#fdf9f3;border-radius:50%;margin-bottom:24px;
   }
-  .adv-icon img{width:36px;height:36px}
+  .adv-icon svg{width:32px;height:32px;stroke:var(--accent);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
   .adv-card h3{font-size:20px;margin-bottom:12px}
   .adv-card p{font-size:15px;color:var(--muted);line-height:1.6}
 
@@ -277,6 +280,18 @@
     .history-image img{height:400px}
     nav{display:none}
   }
+  /* Mobile Hero: фото сверху, потом текст; вторая CTA скрыта */
+  @media (max-width:768px){
+    .hero{padding:32px 0 0}
+    .hero-grid{gap:28px}
+    .hero-text-col{order:2}
+    .hero-image-col{order:1}
+    .hero-image img{height:260px}
+    .hero-sub{font-size:16px;margin-bottom:20px}
+    .hero-bullets li{font-size:15px;padding:8px 0 8px 28px}
+    .hero-cta .btn-outline{display:none}
+    .hero-cta .btn-primary{width:100%}
+  }
 </style>
 </head>
 <body>
@@ -304,10 +319,10 @@
 <section class="hero">
   <div class="container">
     <div class="hero-grid">
-      <div>
+      <div class="hero-text-col">
         <h1>
-          <span class="line">Проектирование кафе</span>
-          <span class="line">и ресторанов</span>
+          <span class="line">Проектирование</span>
+          <span class="line">кафе и&nbsp;ресторанов</span>
           <span class="line hero-h1-accent">в&nbsp;Санкт&#8209;Петербурге</span>
         </h1>
         <p class="hero-sub">Дизайн-проект под ключ за 30–45 дней: концепция, чертежи, технология, согласование с подрядчиками. С 2016 года спроектировали 100+ заведений.</p>
@@ -321,7 +336,7 @@
           <a href="#portfolio" class="btn btn-outline">Смотреть проекты</a>
         </div>
       </div>
-      <div class="hero-image">
+      <div class="hero-image hero-image-col">
         <img src="images/1.png" alt="Интерьер кафе" loading="eager">
       </div>
     </div>
@@ -381,17 +396,26 @@
     <p class="section-sub">Что обычно тормозит запуск — и как мы это решаем на этапе проекта.</p>
     <div class="adv-grid">
       <div class="adv-card">
-        <div class="adv-icon"><img src="images/6.svg" alt=""></div>
+        <div class="adv-icon">
+          <!-- Icon: clipboard-check (документы / нормы) -->
+          <svg viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
+        </div>
         <h3>Согласуем СанПиН и ХАССП</h3>
         <p>Знаем актуальные требования и закладываем их в проект на старте, а не на этапе сдачи объекта.</p>
       </div>
       <div class="adv-card">
-        <div class="adv-icon"><img src="images/7.svg" alt=""></div>
+        <div class="adv-icon">
+          <!-- Icon: wind (вентиляция) -->
+          <svg viewBox="0 0 24 24"><path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h17a3 3 0 1 1-3 3"/><path d="M3 16h9a3 3 0 1 1-3 3"/></svg>
+        </div>
         <h3>Спроектируем вентиляцию по нормам</h3>
         <p>Расчёт воздухообмена и подбор оборудования — заведение пройдёт техэкспертизу с первого раза.</p>
       </div>
       <div class="adv-card">
-        <div class="adv-icon"><img src="images/8.svg" alt=""></div>
+        <div class="adv-icon">
+          <!-- Icon: handshake (подрядчики) -->
+          <svg viewBox="0 0 24 24"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3-3.5 3.5"/><path d="M3 21l3.5-3.5"/><path d="M9 21a5.79 5.79 0 0 1-3.94-2.06L3 17"/></svg>
+        </div>
         <h3>Договоримся с подрядчиками</h3>
         <p>Передаём проект подрядчикам ТПК и СМР с авторским надзором. Вам не придётся объяснять им чертежи.</p>
       </div>
